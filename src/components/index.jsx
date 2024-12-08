@@ -1,0 +1,5 @@
+export {Login} from "./login"
+export {Navbar} from "./navbar"
+export {Sumbit} from "./signup"
+export {Landing} from "./landingpage"
+export {auth} from "../config/firebase"
