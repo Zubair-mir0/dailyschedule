@@ -1,48 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Await } from "react-router-dom";
 import { auth } from "../../config/firebase";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
-
+import { doc, getDoc } from "firebase/firestore";
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from "../../config/firebase";
 export const Login = () => {
-  // useEffect(() => {
-  //   let userValues = localStorage.getItem("UID");
-
-  //   console.log(JSON.parse(userValues));
-  //   setemail(JSON.parse(userValues).email);
-  //   setpass(JSON.parse(userValues).pass);
-  // }, []);
+  
     
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const loginUser = await signInWithEmailAndPassword(auth, email, pass);
       const uid = loginUser.user.uid;
-      const actoken = loginUser.user.accessToken;
-      const num = email;
+      const actoken =loginUser.user.accessToken;
 
-      console.log("actoken", actoken);
-      console.log("user uid", uid);
-      console.log(loginUser);
+      // console.log("actoken", actoken);
+      // console.log("user uid", uid);
+      // console.log(loginUser);
       // const id = localStorage.getItem("id")
-      localStorage.setItem("uid", uid);
-      localStorage.setItem("email", num);
-      localStorage.setItem("pass", pass);
-      navigate("/Landing");
-    } catch (err) {
+
+const userDoc= await getDoc(doc(db, "users", uid));
+if(userDoc.exists()){
+  const userData= userDoc.data();
+  // console.log("fetched users data",userData);
+
+  localStorage.setItem("user", JSON.stringify({...userData,uid,pass,actoken}))
+   
+  navigate("/Landing");
+
+}
+else{
+
+  console.log("error user not found")
+}
+ } catch (err) {
       console.log(err);
       alert("invalid email please try again.");
       navigate("/login");
     }
   };
-  useEffect(() => {
-    const uid = localStorage.getItem("uid");
-    if (!uid) {
-      navigate("/login");
-    } else {
-      navigate("/Landing");
-    }
-  }, []);
+  
 
   const handleonchange = (e) => {
     setemail(e.target.value);
@@ -61,10 +60,7 @@ export const Login = () => {
     }
   }, []);
 
-  const saveInfo = () => {
-    const user = { email, pass };
-    localStorage.setItem("user", JSON.stringify(user));
-  };
+  
 
   const [email, setemail] = useState("");
 

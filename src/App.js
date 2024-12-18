@@ -13,9 +13,16 @@ import { Landing } from "./components/landingpage";
 
 
 const Protectedroute=  ({children})=>{
-    const token = auth.currentUser;
+    // const token = auth.currentUser.accessToken;
+const user= localStorage.getItem("user")
 
-if(!token){
+  const parseduser = JSON.parse(user);
+  // const acctoken = parseduser.token;
+
+
+
+
+if(!user){
   return <Navigate to="/login"/>;
 }
 return children
@@ -36,14 +43,16 @@ useEffect(() => {
     <>
 
   
+           
 
-            <Navbar />
         <Router>
           <Routes>
+            
           <Route
             path="/landing"
             element={
               <Protectedroute>
+                <Navbar/>
                 <Landing />
               </Protectedroute>
             }
