@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../config/firebase";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -8,7 +7,7 @@ export const Navbar = () => {
 
   const Logout = () => {
     // Clear localStorage and navigate to login
-    localStorage.clear();
+    localStorage.clear(); 
     console.log("Local storage has been cleared");
     navigate("/login");
   };
@@ -33,7 +32,7 @@ export const Navbar = () => {
               alt="Rolex Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              ROLEX
+              REMIND
             </span>
           </a>
           <div className="flex items-center space-x-6 rtl:space-x-reverse">

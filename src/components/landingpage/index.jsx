@@ -119,12 +119,7 @@ export const Landing = () => {
       >
         Save Note
       </button>
-      <button
-        onClick={() => Delnote()}
-        className="bg-red-500 text-white py-2 px-4 rounded"
-      >
-        delete note
-      </button>
+      
 
       <div className="mt-6">
         <h2 className="text-xl font-bold">Your Notes</h2>
@@ -160,7 +155,7 @@ export const Landing = () => {
                   <div>
                     <button
                       onClick={() => Startediting(note.id, note.content)}
-                      className="bg-yellow-500 text-white py-1 px-2 rounded mx-1"
+                      className="bg-sky-400 text-white py-1 px-2 rounded mx-1"
                     >
                       Edit
                     </button>

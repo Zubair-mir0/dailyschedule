@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link, Await } from "react-router-dom";
 import { auth } from "../../config/firebase";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword ,signInWithPopup } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from "../../config/firebase";
+import { db, provider } from "../../config/firebase";
+
 export const Login = () => {
   
     
@@ -26,7 +26,7 @@ if(userDoc.exists()){
   const userData= userDoc.data();
   // console.log("fetched users data",userData);
 
-  localStorage.setItem("user", JSON.stringify({...userData,uid,pass,actoken}))
+  localStorage.setItem("user", JSON.stringify({...userData,uid,actoken}))
    
   navigate("/Landing");
 
@@ -50,24 +50,28 @@ else{
     setpass(e.target.value);
   };
   
+  const Googleauth=async()=>{
+    const result = await signInWithPopup(auth, provider);
+              const user = result.user;
 
-  useEffect(() => {
-    let storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const { email, pass } = JSON.parse(storedUser);
-      setemail(email);
-      setpass(pass);
-    }
-  }, []);
+              console.log("uid",user.uid) 
+              localStorage.setItem("user",JSON.stringify({email: user.email,uid: user.uid}))
+              navigate("/landing")
+  }
 
   
 
+  
   const [email, setemail] = useState("");
-
+  
   const [pass, setpass] = useState("");
-
+  
   const navigate = useNavigate();
-
+  
+  const Signup=()=>{
+    navigate("/")
+  }
+  
   return (
     <form className="space-y-6" action="#">
       <h5 className="text-xl font-medium text-gray-900 dark:text-white">
@@ -139,7 +143,15 @@ else{
       >
         Login to your account
       </button>
-      <div className="text-sm font-medium text-gray-500 dark:text-gray-300"></div>
+      <div className="flex justify-center text- ">
+      <button onClick={Googleauth}>Googleauth</button>
+
+      </div>
+      <div className="text-sm flex hover:cursor-pointer justify-center font-medium text-gray-500 dark:text-gray-300">
+      <button onClick={Signup}>
+         Don't have an account?
+        </button>
+      </div>
     </form>
   );
 };

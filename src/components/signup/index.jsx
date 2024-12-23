@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
-import { signInWithPopup } from "firebase/auth";
-import { provider } from "../../config/firebase";
+
+
 export const Sumbit = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -12,12 +12,8 @@ export const Sumbit = () => {
 
   const signup = async () => {
     try {
-          // Sign in with Google
-          const result = await signInWithPopup(auth, provider);
-          const user = result.user;
-
-          console.log(user)
-          return
+          
+                   
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -44,7 +40,8 @@ export const Sumbit = () => {
     navigate("login");
   };
   return (
-    <form className="max-w-sm mx-auto flex flex-col w-[800px] h-[450px] p-6 items-center bg-blue-200 rounded-lg space-y-2">
+    <form className="max-w-sm mx-auto flex flex-col w-[800px] h-[400px] p-6 items-center bg-blue-200 rounded-lg space-y-2">
+   <div className="border">
       <div className="mb-5">
         <label className="block mb-2 text-sm font-medium text-gray-900">
           Your email
@@ -69,6 +66,10 @@ export const Sumbit = () => {
           required
         />
       </div>
+      </div>
+      <div className="flex flex-col h-28 justify-between ">
+  
+
       <button
         type="button"
         onClick={signup}
@@ -80,9 +81,10 @@ export const Sumbit = () => {
         type="button"
         onClick={Back}
         className="text-white bg-blue-700 hover:bg-blue-800 w-full p-2.5 rounded-lg"
-      >
+        >
         Already have an account?
       </button>
+        </div>
     </form>
   );
 };
