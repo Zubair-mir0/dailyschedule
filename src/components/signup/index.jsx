@@ -40,7 +40,9 @@ export const Sumbit = () => {
     navigate("login");
   };
   return (
+
     <form className="max-w-sm mx-auto flex flex-col w-[800px] h-[400px] p-6 items-center bg-blue-200 rounded-lg space-y-2">
+      <h1 className="font-semibold text-2xl text-">DAILY SCHEDULE</h1>
    <div className="border">
       <div className="mb-5">
         <label className="block mb-2 text-sm font-medium text-gray-900">

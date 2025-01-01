@@ -12,19 +12,35 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
+import Sidebar from "../sidebar";
 
 export const Landing = () => {
   const [notes, setNotes] = useState([]);
   const [note, setNote] = useState("");
   const [editId, setEditId] = useState(null);
   const [editContent, setEditContent] = useState("");
+  const [showsidebar,setShowsidebar]=useState(true);
+  const [viewtask,setViewtask]=useState(false);
+  const [activeday,SetActiveday]=useState('');
+    const [myDays,setMyDays] = useState([
+      "Monday",
+      "tuesday",
+      "Wednesday",
+      "Thursday",
+      "friday",
+      "Saturday",
+      "Sunday",
+    ])
   const user = auth.currentUser;
   const Savenote = async () => {
     if (note.trim() === "") return alert("note cannot be empty");
     if (!user) return alert("user not authenticated");
+    if(activeday==="") return alert("select a day please")
     try {
       await addDoc(collection(db, "notes"), {
+        day: activeday,
         uid: user.uid,
         email: user.email,
         content: note,
@@ -104,73 +120,97 @@ export const Landing = () => {
       navigate("/Landing");
     }
   }, []);
-  return (
-    <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Your Notepad</h1>
-      <textarea
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
-        placeholder="Write your note here..."
-      />
-      <button
-        onClick={Savenote}
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        Save Note
-      </button>
-      
 
-      <div className="mt-6">
-        <h2 className="text-xl font-bold">Your Notes</h2>
-        <ul>
-          {notes.map((note) => (
-            <li
-              key={note.id}
-              className="bg-white p-2 my-2 rounded shadow flex justify-between items-center"
-            >
-              {editId === note.id ? (
-                <>
-                  <textarea
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full p-1 border rounded"
-                  />
-                  <button
-                    onClick={SaveEdit}
-                    className="bg-green-500 text-white py-1 px-2 rounded mx-1"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditId(null)}
-                    className="bg-gray-400 text-white py-1 px-2 rounded"
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>{note.content}</p>
-                  <div>
+
+const Handledaychange=async(e)=>{
+ SetActiveday(e)
+console.log(e);
+
+}
+  
+  return (
+    <div className="flex">
+      {/* {showsidebar && (
+        <Sidebar onAddTask={handleAddtask} onViewTask={handleViewtask} />
+      )} */}
+      <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg">
+        <h1 className="text-2xl font-bold mb-4">Your Notepad</h1>
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="w-full p-2 border rounded mb-4"
+          placeholder="Write your note here..."
+        />
+
+        <div className="flex w-96 justify-around">
+
+        <select  value={activeday} onChange={(e)=>Handledaychange(e.target.value)} >
+          {myDays.map((item) => {
+            return <option className="" value={item}>{item}</option>;
+          })}
+        </select>
+        <button
+          onClick={Savenote}
+          className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+          Save Note
+        </button>
+          </div>
+
+        <div className="mt-6">
+          <h2 className="text-xl font-bold">Your Notes</h2>
+          <ul>
+            {notes.map((note) => (
+              <li
+                key={note.id}
+                className="bg-white p-2 my-2 rounded shadow flex justify-between items-center"
+              >
+                {editId === note.id ? (
+                  <>
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full p-1 border rounded"
+                    />
                     <button
-                      onClick={() => Startediting(note.id, note.content)}
-                      className="bg-sky-400 text-white py-1 px-2 rounded mx-1"
+                      onClick={SaveEdit}
+                      className="bg-green-500 text-white py-1 px-2 rounded mx-1"
                     >
-                      Edit
+                      Save
                     </button>
                     <button
-                      onClick={() => delnote(note.id)}
-                      className="bg-red-500 text-white py-1 px-2 rounded"
+                      onClick={() => setEditId(null)}
+                      className="bg-gray-400 text-white py-1 px-2 rounded"
                     >
-                      Delete
+                      Cancel
                     </button>
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                  </>
+                ) 
+                : (
+                  <>
+                    <p>{note.content}</p>
+                    <div>
+                      <button
+                        onClick={() => Startediting(note.id, note.content)}
+                        className="bg-sky-400 text-white py-1 px-2 rounded mx-1"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => delnote(note.id)}
+                        className="bg-red-500 text-white py-1 px-2 rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )
+                }
+              </li>
+            ))
+            }
+          </ul>
+        </div>
       </div>
     </div>
   );

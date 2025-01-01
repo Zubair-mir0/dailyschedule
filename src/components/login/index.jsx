@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link, Await } from "react-router-dom";
+import {useNavigate, Link, Await } from "react-router-dom";
 import { auth } from "../../config/firebase";
 
 import { signInWithEmailAndPassword ,signInWithPopup } from "firebase/auth";
@@ -55,8 +55,8 @@ else{
               const user = result.user;
 
               console.log("uid",user.uid) 
-              localStorage.setItem("user",JSON.stringify({email: user.email,uid: user.uid}))
-              navigate("/landing")
+              localStorage.setItem("user",JSON.stringify({email: user.email,uid: user.uid}));
+              navigate("/landing");
   }
 
   

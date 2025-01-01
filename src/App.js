@@ -8,6 +8,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { Loginscreen } from "./Layout";
 import {Signupscreen} from "./Layout";
 import { Landing } from "./components/landingpage";
+import View from "./components/Viewtask";
+import Sidebar from "./components/sidebar";
 
 
 
@@ -57,6 +59,12 @@ useEffect(() => {
               </Protectedroute>
             }
           />
+          <Route path="/view" element={
+            <Protectedroute>
+              <Navbar />
+              <View/>
+              </Protectedroute>}/>
+          <Route path="/sides" element={<Sidebar/>}/>
             <Route path="/login" element={<Loginscreen />} />
             <Route path="/" element={<Signupscreen />} />
           </Routes>
